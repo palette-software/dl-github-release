@@ -1,0 +1,49 @@
+language: go
+
+go:
+    - 1.6
+
+env:
+    matrix:
+        - GIMME_OS=darwin GIMME_ARCH=386
+        - GIMME_OS=darwin GIMME_ARCH=amd64
+        - GIMME_OS=linux GIMME_ARCH=386
+        - GIMME_OS=linux GIMME_ARCH=amd64
+        - GIMME_OS=windows GIMME_ARCH=386
+        - GIMME_OS=windows GIMME_ARCH=amd64
+    global:
+        - secure: "iK8Zcm1f3/BbCvMgEISgZ0WvmHpk2V4EQHycZlae1hGB2Xr8R9MmIV+fu19+lBu1QOSBpXmUeVJvSwfe9sJHYTKJbcsHeGQM7AIAESvIOiIIZbEDp98WGXwEfxQ1733TgeEX10St4PK8kE3v7G+E5qYhUffjO4DLuE9BfmaQRei2BbcG382rnj9c8vYWF4O00fZEzcDvnwvD9IaeQnB4Jy4e0kkHsIJfvOkwdxbLf6amX9Q7fF7SqBnxHgmvitHef2RBMjBfjT8StUqrBoUVt93j2XXY8m6WWpggaAjilWzvb9Kw9W4XwLryqM+cMCOnbx14SxElrAmmxKjdRFPlSuAWbVaX7O5rK4aANMxXJ7paNUk9bqaWXKor+NsUQ5HC3zPHTRHsmV53J2Yd9bk7n2joAswNXvdN1+KzHY87jUbxZLSakSJ7aSW8ac8MMaUAEzmZizzmqSWBNXfpWFmqvtpjS7fP2zwWfz6f2YWIoVL0n/4+jIWJTR+Ai6fT6RDK3J+gj9A3U4KC2k328nV5mTxFB8SkqWpmJ5RUE6gtE5AZzIcba0mF3l7qKAjD3RjugnPqZ+16fmjjOM60dEeFjhkS43kHF9b7yO+Lk2l+66ruQg4pERj2TbuZqGf6kb95zcflE2vZQ5IjtsswwiDWCIoOI2Praf5UU22fcMl7lkw="
+        - secure: "jF/5nVX1DvZdYr9LGpoS7xajMq9zRSPJV+eN90rZNLCiTcRUtt2LDgIKEGuzwSs+Rnwhx3sMbK8WmYtt/+3H15VIl7TmL5osThxwV2AnbMEKF3cqN1iqjnHb/MivsrB2DEi2OjrZxdxsJlUqVMbGx/r06SaWYyYAewNvoIABydR4JMC0PEEH7Guag/t4ArH0PtDos6s2rsqY/ja20t0JOcRlV0gva8bC0N2xBcS707vFRyM3XX6uT17kfLClKykR1i+6kID6SpBoHZU6QnOCUue1Qto+z0HfBn4ygt6UtPb4ztaL+7idg6hr9VljWFJX+LUcITsItOXQFX4G03POCtJeKuqtLaAHsllCE2+0jcy/6hUBF8WUsCD7PKpjnVBSDAG4VFT+Qehzqrle5oOZCiHw3KCDh7wpOwqW8/HlAlNU8OJ90q3HhQRSr0DZipUfwmCZIbdCpvRfRQ5k4xBjjB5t9WTX0XjVJB1UqJgNS0kc6u2zK3xUf7b3wQ1POQzvu5PSEKTa2wgpMMtgwMPh/uOU10Wnij69PRKkc0feuUytwhoSwSqW8n1FBMXqJBqssz1qTlTLD1Cb/rkLR15XpdBEP2eqEipWAUAa+p7IZ+oJu7xUvR+poCr3feEXpPEGqlO8aw9zNd0HA0mi385ugPa4DqAuObEyq6kpW3VVO6g="
+
+# workaround for travis-ci/gimme#25 to pick up latest version of gimme and run again
+before_install:
+  - echo -e "machine github.com\n  login $CI_USER_TOKEN" >> ~/.netrc
+  - curl -o gimme -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme
+  - chmod u+x gimme
+  - unset GOROOT GOTOOLDIR GIMME_NO_ENV_ALIAS
+  - eval "$(./gimme 1.6)"
+  - go version
+  - go env
+
+script:
+    - go install -v ./...
+
+after_success:
+    - cd $GOPATH/bin/
+    - export CURRENT_ENV_DIR=${GIMME_OS}_${GIMME_ARCH}
+    - export PCKG_FILE=${CURRENT_ENV_DIR}.zip
+    - mkdir -p $CURRENT_ENV_DIR
+    - cp -f $GOPATH/bin/* $CURRENT_ENV_DIR/
+    - zip -r $PCKG_FILE $CURRENT_ENV_DIR
+
+deploy:
+    provider: releases
+    api_key: $GITHUB_TOKEN
+    file:
+        - "${GOPATH}/bin/${GIMME_OS}_${GIMME_ARCH}.zip"
+    skip_cleanup: true
+    on:
+        tags: true
+
+notifications:
+    email: false
