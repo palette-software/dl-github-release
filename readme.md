@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/palette-software/dl-github-release.svg?branch=master)](https://travis-ci.org/palette-software/dl-github-release)
+
 ## Github Release Downloader for Private Repositories
 
 This package is designed to use with CI tools so that they can download the latest release of a private project. 
