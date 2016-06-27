@@ -12,12 +12,9 @@ env:
         - GIMME_OS=windows GIMME_ARCH=386
         - GIMME_OS=windows GIMME_ARCH=amd64
 
-global:
-    - secure: "q+9YhOIx/0N4btgNf4TyK9Rq1k81xnkA9uom4fm1C3kIpjo92CoygfbIqojoJn6jP01v+H6lM0bWTB2SFXS1dDhPq+ET+XXbvxyYj2+RmZVrhgepNuwg9P4Y+jURgJ6e23FiftW6Js5Sa1agsnpKRELENxMcw4JpzHst9kb60qFadjRuyXFaxX1YhiI6nw+FDElstbF9xnkNUuJyx5IbW7dVe6WiOKgQR1DQlLYP8GMZXVwe+OyV9Q751e5kKM8hBE6IgrHnPD0Ki9BQzJLMLD7/8aQBzI6F1ZhkaF960wLGYB3H6Xg1TiE/HXQvlgb+BwJuFrjJNsu1Mb9xVb6ujN5rlN4eHX8CWjnhaP7OeXQhWG3SiswldeXihYDBBdIyk2ww6dFWcp9vPJUQQ89ifcH8WeFoR1/g2IgZiaEahhai9YKnVyCWif4AKu5CK6BuN1uE/UThGRgNMp97hMizeibOrm5oCzh/4JTlRwkmjo/fNNoRG+7JPD+3P+Kr6Z2Gw9zTGWfPf4JID5bE9EMMgrqFXHkQeaGvHvxGuMxiyfHIE1+LeIJtfBYufsy7pl83uBIk9F0W58G/Lzb6Tept+aEA+f9hiofVS+Tw6kQDAWvJkQm5Z2gemHJcm+LAK+GWU5BAErETr3APPqK1pGvNUvOXd108vkUImnHSj7cKdq4="
-
 # workaround for travis-ci/gimme#25 to pick up latest version of gimme and run again
 before_install:
-  - echo -e "machine github.com\n  login $GITHUB_TOKEN" >> ~/.netrc
+  - echo -e "machine github.com\n  login $CI_USER_TOKEN" >> ~/.netrc
   - curl -o gimme -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme
   - chmod u+x gimme
   - unset GOROOT GOTOOLDIR GIMME_NO_ENV_ALIAS
