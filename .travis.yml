@@ -11,16 +11,13 @@ env:
         - GIMME_OS=linux GIMME_ARCH=amd64
         - GIMME_OS=windows GIMME_ARCH=386
         - GIMME_OS=windows GIMME_ARCH=amd64
-
-global:
-  # Github token for palette-robot user
-  - secure: "Fu4wTgNFbNnfp9xv0WzV1Qp26McYTpN0/HuDQV2Zo6oUcezyXIVv3B7P59Xp/JDo9OSXDJ62cUXbDzDJ7voEc4cSi+z/DpL47yfsN+ixcHlvkvKVPC4kAhp4VfJveKb4bRefZeWflHaPPcM9Q1769Ubt3dlOgt8jEgS6O7ePE4A7KsxthPvWXwZF5PRJAiXELCzd8zb3+/OpN58CxmI1v9RdDQMbE4tOXZ0+QlYHaDndajfQzljmQpwlojwbKvTd7YfXA1nSK4wwY68DfUHlYG9y+CbmO5xBgpXb3bFpH5a3nNRS0lxzAtONfDL+BZ+cODmoUKxdd64mFm1fDyy6HasYIlZ5twCwWFjCu3CJtiroiGJzCslUlfht+s4K2yjmbwjrSWPSvvmOAsEWz3NCEUihdluvdfvPYwusYC3ZHwgCigNq85uZpZwd1MF2Lptuna5q1hEytxWjQxpQBXjPj1xeJ4GS1twwqKZYFzaOloZoEn+2b9Y81AFEfn5IjC5fjsC8KjTN2tp+ZdDtiqOEuJK2RHIl7PgW8kdrh5Yac9ZAOycpAN5gdSTD1Sr927b+q0EPUX0uGon/2FTO4BF1w7Lbfisht7gztiZ9bQrDEfmBcRQt1y0ig10OsxPQGQun42OHjqpO+tL3I6aBInh3rSsR7nEYrGPgAfJYP411rTM="
-  # Password for palette-robot user
-  - secure: "oeJsTbgQ8SbM0n+oBrWnCQTpVgtGVfZEPUHqAApFsyGoQVUyvw9fk/haSqclkDZMZ8g49ptMJG966is8bfTvaPrwgxBBT5w2aZsXalT2OaVvdsMa9e/y+D5yn7G0lWlsRZvm3mQMDSopBHq5k4BRoEoDxgDr+cwQsTtH2lyYnAQzfBkrGlSscnZgzP6IZTZWmbXvUHMuIqeYfflsAa7CENAaNhl/6PD8RRtFNN3QonaFNxfYthGCy95miOKo1DbB+sb+d+5bMmDPuFf5mHEr5Yl1Tc/qHpw3WC0m4lYk81vwD2v7TC9f/2rskdwn2wveKWOZgPJ3I+gx+x1if7hQK6wSYRPR9O96SfmtkXggpIDnbQzFlgPxPMm668O3h/FX0roJ8+bJOgnto2CKUNv1eQkTykQD9sYOBvf1gy9DxQwNbuqKYcRt6nh5OX8VMDm/AnOU9YwDa98xgy9lKli70iSwI2+cYG7+Mtl0ATsUHlbFeHE0QpkQ/dlGz4B8CAH6575K4aVKFnlZHbXkUo4KrHgMg4IKXXptjRAV8HuSZ+CUJ1LGVDDkRG4lsEfUFJZbJ14ib1ybLKRCN14zAgK0SIihWpWYg/OJvjxo9G1AIP9lsqE1lwBexnMCLZvHo2LsPQyLyX2yCe6v6PQ2qywF0CL9xw2S0nzpclp1w5KR4ZM="
+    global:
+      - secure: "Fu4wTgNFbNnfp9xv0WzV1Qp26McYTpN0/HuDQV2Zo6oUcezyXIVv3B7P59Xp/JDo9OSXDJ62cUXbDzDJ7voEc4cSi+z/DpL47yfsN+ixcHlvkvKVPC4kAhp4VfJveKb4bRefZeWflHaPPcM9Q1769Ubt3dlOgt8jEgS6O7ePE4A7KsxthPvWXwZF5PRJAiXELCzd8zb3+/OpN58CxmI1v9RdDQMbE4tOXZ0+QlYHaDndajfQzljmQpwlojwbKvTd7YfXA1nSK4wwY68DfUHlYG9y+CbmO5xBgpXb3bFpH5a3nNRS0lxzAtONfDL+BZ+cODmoUKxdd64mFm1fDyy6HasYIlZ5twCwWFjCu3CJtiroiGJzCslUlfht+s4K2yjmbwjrSWPSvvmOAsEWz3NCEUihdluvdfvPYwusYC3ZHwgCigNq85uZpZwd1MF2Lptuna5q1hEytxWjQxpQBXjPj1xeJ4GS1twwqKZYFzaOloZoEn+2b9Y81AFEfn5IjC5fjsC8KjTN2tp+ZdDtiqOEuJK2RHIl7PgW8kdrh5Yac9ZAOycpAN5gdSTD1Sr927b+q0EPUX0uGon/2FTO4BF1w7Lbfisht7gztiZ9bQrDEfmBcRQt1y0ig10OsxPQGQun42OHjqpO+tL3I6aBInh3rSsR7nEYrGPgAfJYP411rTM="
 
 # workaround for travis-ci/gimme#25 to pick up latest version of gimme and run again
 before_install:
-  - echo -e "machine github.com\n  login palette-robot\n  password $GITHUB_PASSWORD" >> ~/.netrc
+  - echo -e "machine github.com\n  login $GITHUB_TOKEN" >> ~/.netrc
+  - chmod 600 ~/.netrc
   - curl -o gimme -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme
   - chmod u+x gimme
   - unset GOROOT GOTOOLDIR GIMME_NO_ENV_ALIAS
