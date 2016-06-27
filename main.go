@@ -29,7 +29,7 @@ func connect(token string) *github.Client {
 }
 
 func main() {
-	log.AddTarget(os.Stdout, log.InfoLevel)
+	log.AddTarget(os.Stdout, log.LevelInfo)
 	if len(os.Args) < 4 {
 		log.Error("Usage: ", os.Args[0], " <owner> <repository> <access token>")
 		os.Exit(1)
