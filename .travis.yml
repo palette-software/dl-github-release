@@ -17,7 +17,7 @@ global:
 
 # workaround for travis-ci/gimme#25 to pick up latest version of gimme and run again
 before_install:
-  - echo -e "machine github.com\n  login $GITHUB_TOKEN" >> ~/.netrc
+  - echo -e "machine github.com\n  login palette-robot\n  password $GITHUB_TOKEN" >> ~/.netrc
   - curl -o gimme -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme
   - chmod u+x gimme
   - unset GOROOT GOTOOLDIR GIMME_NO_ENV_ALIAS
