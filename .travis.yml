@@ -12,9 +12,12 @@ env:
         - GIMME_OS=windows GIMME_ARCH=386
         - GIMME_OS=windows GIMME_ARCH=amd64
 
+global:
+  - secure: VatwB+W+XLizQZGxVdCTSTQcDC7aVYZV2gCEpaZy7pMweDAiHkPbMr36DI4r/7c5Y+UuZeAdnBQpx570WUMvFI1E/yz42rbKTklDQMYiBjtt2st7cJxUsOX0bvB1ddceIQhZGo40Tbo4iWDs4dW1lxksntYB/IrfwKdg8kkWxjJZuWseWPvgnzt59sm/EwK+b/AV79YBL35IefE/Mjm9P2RbqpEnLvbTJ4/fwZUDFYMQj5+qcqqJ968cpMNTdWpj8+goy+zx2ri0C24bLH1zKbr80OLLSjgbw2/BcpGzvfJkxXCiewZ4dO2GmumxgSVVBux365P+tM1Thk1zmNAOfw+9hKxxWQe1AkcEWZxFJXj6MhyIPBgFvEaoCmBhToFcYn6imEwAVqeu4vj/SYJ/IexHKCfQdZ/tR5iIgi6ZZBH5dfv8hSZElxqaSs486en6RxAeuk2Mizt7kHKX1HkOlVMA0LaVHcTCrBlPEo5aLQHm5lOP1pg2jTLyJR491otyySqqQNul11UB12Ay8qgHP/aiyra8MrlgRwhymQ86AhYSkfw2wFv55emBXPcGNZehpdcBTCRcQJcET2LMWzXyO+JRm+FtAGpxeHH03hR1tGNWVrooZT3YnoLIqWPxVbqINgp1r8Lrp8cZOanxo+2cTkHMqmVnn/K6eUJxbO1X2CQ=
+
 # workaround for travis-ci/gimme#25 to pick up latest version of gimme and run again
 before_install:
-  - echo -e "machine github.com\n  login $CI_USER_TOKEN" >> ~/.netrc
+  - echo -e "machine github.com\n  login $GITHUB_TOKEN" >> ~/.netrc
   - curl -o gimme -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme
   - chmod u+x gimme
   - unset GOROOT GOTOOLDIR GIMME_NO_ENV_ALIAS
@@ -35,9 +38,7 @@ after_success:
 
 deploy:
     provider: releases
-    api_key: 
-        # palette-robot with no repo restriction
-        secure: VatwB+W+XLizQZGxVdCTSTQcDC7aVYZV2gCEpaZy7pMweDAiHkPbMr36DI4r/7c5Y+UuZeAdnBQpx570WUMvFI1E/yz42rbKTklDQMYiBjtt2st7cJxUsOX0bvB1ddceIQhZGo40Tbo4iWDs4dW1lxksntYB/IrfwKdg8kkWxjJZuWseWPvgnzt59sm/EwK+b/AV79YBL35IefE/Mjm9P2RbqpEnLvbTJ4/fwZUDFYMQj5+qcqqJ968cpMNTdWpj8+goy+zx2ri0C24bLH1zKbr80OLLSjgbw2/BcpGzvfJkxXCiewZ4dO2GmumxgSVVBux365P+tM1Thk1zmNAOfw+9hKxxWQe1AkcEWZxFJXj6MhyIPBgFvEaoCmBhToFcYn6imEwAVqeu4vj/SYJ/IexHKCfQdZ/tR5iIgi6ZZBH5dfv8hSZElxqaSs486en6RxAeuk2Mizt7kHKX1HkOlVMA0LaVHcTCrBlPEo5aLQHm5lOP1pg2jTLyJR491otyySqqQNul11UB12Ay8qgHP/aiyra8MrlgRwhymQ86AhYSkfw2wFv55emBXPcGNZehpdcBTCRcQJcET2LMWzXyO+JRm+FtAGpxeHH03hR1tGNWVrooZT3YnoLIqWPxVbqINgp1r8Lrp8cZOanxo+2cTkHMqmVnn/K6eUJxbO1X2CQ=
+    api_key: $GITHUB_TOKEN
     file:
         - "${GOPATH}/bin/${GIMME_OS}_${GIMME_ARCH}.zip"
     skip_cleanup: true
