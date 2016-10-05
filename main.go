@@ -31,7 +31,7 @@ func connect(token string) *github.Client {
 func main() {
 	log.AddTarget(os.Stdout, log.LevelInfo)
 	if len(os.Args) < 4 {
-		log.Error("Usage: ", os.Args[0], " <owner> <repository> <access token>")
+		log.Error("Usage: ", os.Args[0], " <owner> <repository> <access token> [release tag]")
 		os.Exit(1)
 	}
 	owner := os.Args[1]
@@ -40,16 +40,25 @@ func main() {
 
 	client := connect(token)
 
-	// Get the latest release
-	latest, _, err := client.Repositories.GetLatestRelease(owner, repo)
+	var release *github.RepositoryRelease
+	var err error
+
+	if len(os.Args) > 4 {
+		tag := os.Args[4]
+		release, _, err = client.Repositories.GetReleaseByTag(owner, repo, tag)
+	} else {
+		// Get the latest release
+		release, _, err = client.Repositories.GetLatestRelease(owner, repo)
+	}
+
 	if err != nil {
 		log.Error("Error while getting latest release: ", err)
 		os.Exit(1)
 	}
 
-	// Get assets for the latest release
+	// Get assets for the release
 	var opt github.ListOptions
-	assets, _, err := client.Repositories.ListReleaseAssets(owner, repo, *(latest.ID), &opt)
+	assets, _, err := client.Repositories.ListReleaseAssets(owner, repo, *(release.ID), &opt)
 
 	// Download each asset
 	for _, asset := range assets {
