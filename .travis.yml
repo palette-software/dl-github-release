@@ -1,16 +1,13 @@
 language: go
 
-go:
-    - 1.6
-
 env:
     matrix:
-        - GIMME_OS=darwin GIMME_ARCH=386
-        - GIMME_OS=darwin GIMME_ARCH=amd64
-        - GIMME_OS=linux GIMME_ARCH=386
-        - GIMME_OS=linux GIMME_ARCH=amd64
-        - GIMME_OS=windows GIMME_ARCH=386
-        - GIMME_OS=windows GIMME_ARCH=amd64
+        - GOOS=darwin GOARCH=386
+        - GOOS=darwin GOARCH=amd64
+        - GOOS=linux GOARCH=386
+        - GOOS=linux GOARCH=amd64
+        - GOOS=windows GOARCH=386
+        - GOOS=windows GOARCH=amd64
     global:
       - secure: "Fu4wTgNFbNnfp9xv0WzV1Qp26McYTpN0/HuDQV2Zo6oUcezyXIVv3B7P59Xp/JDo9OSXDJ62cUXbDzDJ7voEc4cSi+z/DpL47yfsN+ixcHlvkvKVPC4kAhp4VfJveKb4bRefZeWflHaPPcM9Q1769Ubt3dlOgt8jEgS6O7ePE4A7KsxthPvWXwZF5PRJAiXELCzd8zb3+/OpN58CxmI1v9RdDQMbE4tOXZ0+QlYHaDndajfQzljmQpwlojwbKvTd7YfXA1nSK4wwY68DfUHlYG9y+CbmO5xBgpXb3bFpH5a3nNRS0lxzAtONfDL+BZ+cODmoUKxdd64mFm1fDyy6HasYIlZ5twCwWFjCu3CJtiroiGJzCslUlfht+s4K2yjmbwjrSWPSvvmOAsEWz3NCEUihdluvdfvPYwusYC3ZHwgCigNq85uZpZwd1MF2Lptuna5q1hEytxWjQxpQBXjPj1xeJ4GS1twwqKZYFzaOloZoEn+2b9Y81AFEfn5IjC5fjsC8KjTN2tp+ZdDtiqOEuJK2RHIl7PgW8kdrh5Yac9ZAOycpAN5gdSTD1Sr927b+q0EPUX0uGon/2FTO4BF1w7Lbfisht7gztiZ9bQrDEfmBcRQt1y0ig10OsxPQGQun42OHjqpO+tL3I6aBInh3rSsR7nEYrGPgAfJYP411rTM="
 
@@ -18,19 +15,13 @@ env:
 before_install:
   - echo -e "machine github.com\n  login $GITHUB_TOKEN" >> ~/.netrc
   - chmod 600 ~/.netrc
-  - curl -o gimme -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme
-  - chmod u+x gimme
-  - unset GOROOT GOTOOLDIR GIMME_NO_ENV_ALIAS
-  - eval "$(./gimme 1.6)"
-  - go version
-  - go env
 
 script:
     - go install -v ./...
 
 after_success:
     - cd $GOPATH/bin/
-    - export CURRENT_ENV_DIR=${GIMME_OS}_${GIMME_ARCH}
+    - export CURRENT_ENV_DIR=${GOOS}_${GOARCH}
     - export PCKG_FILE=${CURRENT_ENV_DIR}.zip
     - mkdir -p $CURRENT_ENV_DIR
     - cp -f $GOPATH/bin/* $CURRENT_ENV_DIR/
@@ -39,8 +30,7 @@ after_success:
 deploy:
     provider: releases
     api_key: $GITHUB_TOKEN
-    file:
-        - "${GOPATH}/bin/${GIMME_OS}_${GIMME_ARCH}.zip"
+    file: "${GOPATH}/bin/${GOOS}_${GOARCH}.zip"
     skip_cleanup: true
     on:
         tags: true
