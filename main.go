@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-import log "github.com/palette-software/insight-tester/common/logging"
+import log "github.com/palette-software/go-log-targets"
 
 // This mapping thing is a workaround an issue in the google/go-github package
 // https://github.com/google/go-github/issues/246
